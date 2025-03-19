@@ -117,6 +117,9 @@ void Dijkstra(int graph[V][V], int start, int end)
             printf("%d\n\r", path[i]);
         }
     }
+
+    /* Free malloced heap */
+    free(heap);
 }
 
 int main()

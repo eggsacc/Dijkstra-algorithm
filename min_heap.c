@@ -1,13 +1,20 @@
 #include"min_heap.h"
 
+/*
+ * @brief Mallocs new heap struct
+ * @return minHeap* heap
+ * @note returns NULL if malloc unsuccessful
+ */
 minHeap* CreateHeap(int size)
 {
     minHeap* heap = (minHeap*)malloc(sizeof(minHeap));
     heapNode* arr = (heapNode*)malloc(sizeof(heapNode) * size);
 
+    /* Check if malloc successful */
     if(heap == NULL || arr == NULL)
     {
         printf("Error creating heap: malloc fail\n");
+        return NULL;
     }
 
     heap->arr = arr;
@@ -15,8 +22,14 @@ minHeap* CreateHeap(int size)
     return heap;
 }
 
+/*
+ * @brief Swaps 2 elements in a heap
+ * @return void
+ * @note Static function
+ */
 static void swap(minHeap* heap, int idx1, int idx2)
 {
+    /* Check if indexes are valid */
     if(idx1 > heap->size || idx1 < 0 || idx2 > heap->size || idx2 < 0)
     {
         printf("Heap swap error: index out of heap size\n");
@@ -33,6 +46,10 @@ static void swap(minHeap* heap, int idx1, int idx2)
     heap->arr[idx2] = temp;
 }
 
+/*
+ * @brief Insert new node in heap based on node weight
+ * @return void
+ */
 void InsertHeap(minHeap* heap, int node, int weight)
 {
     heap->arr[heap->size].node = node;
@@ -46,8 +63,17 @@ void InsertHeap(minHeap* heap, int node, int weight)
     heap->size++;
 }
 
+/*
+ * @brief Pop & returns the node with smallest weight
+ * @return heapNode node
+ */
 heapNode PopHeap(minHeap* heap)
 {
+    if(heap->size == 0)
+    {
+        printf("Pop heap error: heap empty\n");
+    }
+
     heapNode temp = heap->arr[0];
     heap->arr[0] = heap->arr[heap->size - 1];
     heap->size--;
@@ -55,6 +81,7 @@ heapNode PopHeap(minHeap* heap)
     int idx = 0;
     while(1)
     {
+        /* Check if node is larger than children nodes */
         int left_idx = idx * 2 + 1;
         int right_idx = idx * 2 + 2;
         int smallest = idx;
@@ -69,6 +96,7 @@ heapNode PopHeap(minHeap* heap)
             smallest = right_idx;
         }
 
+        /* If a smaller child node is present, swap values with it */
         if(smallest != idx)
         {
             swap(heap, idx, smallest);
@@ -82,20 +110,3 @@ heapNode PopHeap(minHeap* heap)
 
     return temp;
 }
-
-// int main()
-// {
-//     minHeap* heap = CreateHeap(5);
-//     InsertHeap(heap, 0, 1);
-//     InsertHeap(heap, 1, 5);
-//     InsertHeap(heap, 2, 0);
-
-//     for(int i = 0; i < heap->size; i++)
-//     {
-//         printf("node: %d, weight: %d\n", heap->arr[i].node, heap->arr[i].weight);
-//     }
-
-//     free(heap);
-
-//     return 0;
-// }
